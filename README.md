@@ -1,5 +1,7 @@
 # JsonMorph: JSON A → B migration microservice (+ MCP server)
 
+[![CI](https://github.com/tharun30516/json-morph/actions/workflows/ci.yml/badge.svg)](https://github.com/tharun30516/json-morph/actions/workflows/ci.yml)
+
 JsonMorph turns JSON in shape **A** into shape **B** using a declarative mapping, then moves your data with batched migration jobs. It is also an **MCP server**, so Claude (or any MCP client) can infer, test, save and run migrations itself.
 
 - **.NET 8 minimal API.** Zero NuGet dependencies.
