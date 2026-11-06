@@ -1,0 +1,67 @@
+@base = http://localhost:5080
+
+### Health
+GET {{base}}/health
+
+### Infer a mapping from one A/B example
+POST {{base}}/api/mappings/infer
+Content-Type: application/json
+
+{
+  "name": "people-v2",
+  "save": true,
+  "source": { "first": "Jane", "last": "Doe", "mail": " JANE@X.COM ", "age": "34" },
+  "target": { "name": "Jane Doe", "contact": { "email": "jane@x.com" }, "age": 34 }
+}
+
+### Transform a record with the saved mapping
+POST {{base}}/api/transform
+Content-Type: application/json
+
+{
+  "mappingName": "people-v2",
+  "input": { "first": "Sam", "last": "Lee", "mail": "SAM@Y.COM", "age": "41" }
+}
+
+### Dry-run a migration from a file in the data folder
+POST {{base}}/api/migrations
+Content-Type: application/json
+
+{
+  "mappingName": "people-v2",
+  "source": { "type": "file", "path": "people.json" },
+  "dryRun": true
+}
+
+### Real migration: file -> ndjson, with dead letters
+POST {{base}}/api/migrations
+Content-Type: application/json
+
+{
+  "mappingName": "people-v2",
+  "source": { "type": "file", "path": "people.json" },
+  "sink": { "type": "file", "path": "out/people-v2.ndjson" },
+  "deadLetterPath": "out/people-failed.ndjson",
+  "batchSize": 1000,
+  "maxErrors": 50
+}
+
+### Migration: HTTP API -> HTTP API
+POST {{base}}/api/migrations
+Content-Type: application/json
+
+{
+  "mappingName": "people-v2",
+  "source": { "type": "http", "url": "http://localhost:9000/legacy/people", "recordsPath": "$.data" },
+  "sink": { "type": "http", "url": "http://localhost:9001/v2/people/bulk", "headers": { "Authorization": "Bearer xyz" } },
+  "batchSize": 200
+}
+
+### List migrations
+GET {{base}}/api/migrations
+
+### MCP: list tools
+POST {{base}}/mcp
+Content-Type: application/json
+
+{ "jsonrpc": "2.0", "id": 1, "method": "tools/list" }

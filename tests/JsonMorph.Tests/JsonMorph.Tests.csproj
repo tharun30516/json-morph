@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Dependency-free test runner (dotnet run). Swap for xUnit if you prefer; the assertions map 1:1. -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\JsonMorph.Core\JsonMorph.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\samples\*.json" Link="samples\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

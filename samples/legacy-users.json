@@ -1,0 +1,34 @@
+[
+  {
+    "user_id": 101,
+    "first": "Jane",
+    "last": "Doe",
+    "contact": { "email": "  Jane.Doe@Example.COM ", "phone": "555-123-4567" },
+    "active": "yes",
+    "created": "03/15/2021",
+    "labels": "vip, beta",
+    "orders": [
+      { "order_no": "A-1", "amount": "19.99", "placed": 1700000000 },
+      { "order_no": "A-2", "amount": "5.5", "placed": 1700086400 }
+    ]
+  },
+  {
+    "user_id": 102,
+    "first": "Sam",
+    "last": "Lee",
+    "contact": { "email": "SAM@EXAMPLE.COM", "phone": "555-987-0000" },
+    "active": "no",
+    "created": "11/02/2019",
+    "labels": "",
+    "orders": []
+  },
+  {
+    "user_id": 103,
+    "first": "Broken",
+    "last": "Record",
+    "contact": { "phone": "555-000-1111" },
+    "active": "maybe",
+    "created": "not a date",
+    "orders": [ { "amount": "abc" } ]
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "name": "users-v1-to-v2",
+  "description": "Legacy CRM user export (A) -> v2 user API shape (B)",
+  "rules": [
+    { "target": "id", "source": "$.user_id", "transform": ["toString"], "required": true },
+    { "target": "profile.fullName", "template": "{$.first} {$.last}" },
+    { "target": "profile.email", "source": "$.contact.email", "transform": ["trim", "lower"], "required": true },
+    { "target": "profile.phoneMasked", "source": "$.contact.phone", "transform": [{ "op": "replace", "find": "-", "with": "" }, { "op": "mask", "keepLast": 4 }] },
+    { "target": "status", "source": "$.active", "transform": ["toBool", { "op": "map", "values": { "true": "ACTIVE", "false": "INACTIVE" } }], "default": "UNKNOWN" },
+    { "target": "createdAt", "source": "$.created", "transform": [{ "op": "date", "from": "MM/dd/yyyy", "to": "yyyy-MM-dd" }] },
+    { "target": "tags", "source": "$.labels", "transform": [{ "op": "split", "sep": "," }] },
+    {
+      "target": "orders",
+      "source": "$.orders",
+      "each": {
+        "rules": [
+          { "target": "orderId", "source": "$.order_no", "required": true },
+          { "target": "total", "source": "$.amount", "transform": ["toNumber", { "op": "round", "digits": 2 }] },
+          { "target": "placedAt", "source": "$.placed", "transform": [{ "op": "date", "from": "unix", "to": "yyyy-MM-ddTHH:mm:ssZ" }] }
+        ]
+      }
+    },
+    { "target": "meta.migratedAt", "source": "$now" },
+    { "target": "meta.source", "const": "legacy-crm" }
+  ]
+}
