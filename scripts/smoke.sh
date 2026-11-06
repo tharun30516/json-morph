@@ -40,7 +40,7 @@ PY
 SINK_PID=$!
 
 dotnet build -nologo -v q src/JsonMorph.Api >/dev/null
-dotnet run --no-build --project src/JsonMorph.Api -- --urls "$BASE" \
+dotnet run --no-build --no-launch-profile --project src/JsonMorph.Api -- --urls "$BASE" \
   --JsonMorph:DataRoot="$DATA" --JsonMorph:AllowedHttpHosts:0=127.0.0.1 >"$DATA/api.log" 2>&1 &
 API_PID=$!
 for _ in $(seq 1 60); do curl -sf "$BASE/health" >/dev/null 2>&1 && break; sleep 0.5; done
@@ -112,7 +112,7 @@ r=$(printf '%s\n' \
   '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"smoke","version":"1"}}}' \
   '{"jsonrpc":"2.0","method":"notifications/initialized"}' \
   '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"transform_json","arguments":{"input":{"a":" Hi "},"mapping":{"rules":[{"target":"b","source":"$.a","transform":["trim","upper"]}]}}}}' \
-  | dotnet run --no-build --project src/JsonMorph.Api -- --stdio --JsonMorph:DataRoot="$DATA" 2>/dev/null)
+  | dotnet run --no-build --no-launch-profile --project src/JsonMorph.Api -- --stdio --JsonMorph:DataRoot="$DATA" 2>/dev/null)
 lines=$(echo "$r" | wc -l)
 [ "$lines" -eq 2 ] && ok "stdout carries only 2 JSON-RPC responses" || fail "stdio output" "$r"
 check "stdio transform_json" "$(echo "$r" | tail -1)" "j['result']['structuredContent']['output']=={'b':'HI'}"

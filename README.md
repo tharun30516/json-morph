@@ -34,12 +34,14 @@ claude mcp add --transport http json-morph http://localhost:5080/mcp
   "mcpServers": {
     "json-morph": {
       "command": "dotnet",
-      "args": ["run", "--project", "/path/to/json-morph/src/JsonMorph.Api", "--", "--stdio",
+      "args": ["run", "--no-launch-profile", "--project", "/path/to/json-morph/src/JsonMorph.Api", "--", "--stdio",
                "--JsonMorph:DataRoot=/path/to/data"]
     }
   }
 }
 ```
+
+`--no-launch-profile` keeps `dotnet run` from printing to stdout, where the MCP messages go.
 
 Then just ask: *"Here's a record from the old API and what the new API expects. Build the mapping, dry-run it on `exports/users.json`, then migrate it to `out/users.ndjson`."*
 
